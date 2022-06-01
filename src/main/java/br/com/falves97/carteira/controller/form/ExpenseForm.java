@@ -12,7 +12,7 @@ public class ExpenseForm {
     @NotNull @NotEmpty
     private String description;
     @NotNull @NotEmpty
-    private Double value;
+    private String value;
     @NotNull @NotEmpty
     private String date;
 
@@ -20,7 +20,7 @@ public class ExpenseForm {
         return description;
     }
 
-    public Double getValue() {
+    public String getValue() {
         return value;
     }
 
@@ -30,7 +30,8 @@ public class ExpenseForm {
 
     public static Expense valueOf(ExpenseForm expenseForm) {
         LocalDate localDate = LocalDate.parse(expenseForm.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        Double value = Double.valueOf(expenseForm.getValue());
 
-        return new Expense(expenseForm.getDescription(), expenseForm.getValue(), localDate);
+        return new Expense(expenseForm.getDescription(), value, localDate);
     }
 }
