@@ -10,6 +10,7 @@ public class Transaction {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+    @Column(unique = true)
     protected String description;
 
     @Column(name = "value_transaction")
