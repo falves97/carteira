@@ -46,17 +46,22 @@ public class ExpenseController {
     @PostMapping
     @Transactional
     public ResponseEntity<TransactionDto> insert(@RequestBody @Valid TransactionForm transactionForm, UriComponentsBuilder uriComponentsBuilder) {
-        Transaction transaction = TransactionForm.valueOf(transactionForm);
-        Expense expense = new Expense(transaction);
+        try {
+            Transaction transaction = TransactionForm.valueOf(transactionForm);
+            Expense expense = new Expense(transaction);
 
-        repository.save(expense);
+            repository.save(expense);
 
-        return getUriExpense(uriComponentsBuilder, expense);
+            return getUriExpense(uriComponentsBuilder, expense);
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<TransactionDto> update(@RequestBody TransactionUpdateForm transactionUpdateForm, UriComponentsBuilder uriComponentsBuilder, @PathVariable Long id) {
+    public ResponseEntity<TransactionDto> update(@RequestBody TransactionUpdateForm transactionUpdateForm, @PathVariable Long id) {
         Optional<Expense> expense = repository.findById(id);
 
         if (expense.isPresent()) {

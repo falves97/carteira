@@ -47,17 +47,22 @@ public class RevenueController {
     @PostMapping
     @Transactional
     public ResponseEntity<TransactionDto> insert(@RequestBody @Valid TransactionForm transactionForm, UriComponentsBuilder uriComponentsBuilder) {
-        Transaction transaction = TransactionForm.valueOf(transactionForm);
-        Revenue revenue = new Revenue(transaction);
 
-        repository.save(revenue);
+        try {
+            Transaction transaction = TransactionForm.valueOf(transactionForm);
+            Revenue revenue = new Revenue(transaction);
 
-        return getUriExpense(uriComponentsBuilder, revenue);
+            repository.save(revenue);
+
+            return getUriExpense(uriComponentsBuilder, revenue);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<TransactionDto> update(@RequestBody TransactionUpdateForm transactionUpdateForm, UriComponentsBuilder uriComponentsBuilder, @PathVariable Long id) {
+    public ResponseEntity<TransactionDto> update(@RequestBody TransactionUpdateForm transactionUpdateForm, @PathVariable Long id) {
         Optional<Revenue> revenue = repository.findById(id);
 
         if (revenue.isPresent()) {

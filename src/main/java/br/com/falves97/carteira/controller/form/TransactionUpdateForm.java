@@ -1,15 +1,20 @@
 package br.com.falves97.carteira.controller.form;
 
-import br.com.falves97.carteira.model.entity.Expense;
+import br.com.falves97.carteira.controller.dto.TransactionDto;
+import br.com.falves97.carteira.model.entity.Category;
 import br.com.falves97.carteira.model.entity.Transaction;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TransactionUpdateForm {
     private String description;
     private String value;
     private String date;
+
+    private List<String> categories;
 
     public String getDescription() {
         return description;
@@ -23,18 +28,30 @@ public class TransactionUpdateForm {
         return date;
     }
 
-    public static void update(TransactionUpdateForm transactionUpdateForm, Transaction expense) {
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public static void update(TransactionUpdateForm transactionUpdateForm, Transaction transaction) {
         if (transactionUpdateForm.getDate() != null) {
             LocalDate localDate = LocalDate.parse(transactionUpdateForm.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            expense.setDate(localDate);
+            transaction.setDate(localDate);
         }
 
         if (transactionUpdateForm.getDescription() != null) {
-            expense.setDescription(transactionUpdateForm.getDescription());
+            transaction.setDescription(transactionUpdateForm.getDescription());
         }
 
         if (transactionUpdateForm.getValue() != null) {
-            expense.setValue(TransactionForm.getaDoubleValue(transactionUpdateForm.getValue()));
+            transaction.setValue(TransactionForm.getaDoubleValue(transactionUpdateForm.getValue()));
+        }
+
+        if (transactionUpdateForm.getCategories() != null) {
+            List<Category> list = transactionUpdateForm.getCategories()
+                    .stream()
+                    .map(Category::of).toList();
+
+            transaction.setCategories(list);
         }
     }
 }

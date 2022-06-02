@@ -1,7 +1,12 @@
 package br.com.falves97.carteira.model.entity;
 
+import br.com.falves97.carteira.model.converter.TransactionConverter;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "transactions")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -19,19 +24,32 @@ public class Transaction {
     protected LocalDate date;
 
     public Transaction() {
+        setCategories(null);
     }
+
+    @Convert(converter = TransactionConverter.class)
+    protected List<Category> categories;
 
     public Transaction(String description, Double value, LocalDate date) {
         this.description = description;
         this.value = value;
         this.date = date;
+        setCategories(null);
     }
 
     public Transaction(Transaction transaction) {
         id = transaction.getId();
-        description = transaction.getDescription();
-        value = transaction.getValue();
-        date = transaction.getDate();
+        this.description = transaction.getDescription();
+        this.value = transaction.getValue();
+        this.date = transaction.getDate();
+        setCategories(transaction.getCategories());
+    }
+
+    public Transaction(String description, Double value, LocalDate date, ArrayList<Category> categories) {
+        this.description = description;
+        this.value = value;
+        this.date = date;
+        setCategories(categories);
     }
 
     public Long getId() {
@@ -60,5 +78,21 @@ public class Transaction {
 
     public void setDate(LocalDate dateTransaction) {
         this.date = dateTransaction;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        if (categories != null) {
+            if (!categories.isEmpty()) {
+                this.categories = categories;
+            } else {
+                categories = new ArrayList<>();
+                categories.add(Category.OTHERS);
+                this.categories = categories;
+            }
+        }
     }
 }

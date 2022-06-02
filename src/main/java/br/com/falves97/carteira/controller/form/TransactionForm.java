@@ -1,5 +1,6 @@
 package br.com.falves97.carteira.controller.form;
 
+import br.com.falves97.carteira.model.entity.Category;
 import br.com.falves97.carteira.model.entity.Expense;
 import br.com.falves97.carteira.model.entity.Transaction;
 import com.sun.istack.NotNull;
@@ -10,6 +11,8 @@ import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class TransactionForm {
@@ -19,6 +22,8 @@ public class TransactionForm {
     private String value;
     @NotNull @NotEmpty
     private String date;
+
+    private List<String> categories;
 
     public String getDescription() {
         return description;
@@ -32,11 +37,22 @@ public class TransactionForm {
         return date;
     }
 
+    public List<String> getCategories() {
+        return categories;
+    }
+
     public static Transaction valueOf(TransactionForm transactionForm) {
         LocalDate localDate = LocalDate.parse(transactionForm.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         Double value = getaDoubleValue(transactionForm.getValue());
+        ArrayList<Category> categories = new ArrayList<>();
 
-        return new Transaction(transactionForm.getDescription(), value, localDate);
+        if (transactionForm.getCategories() != null) {
+            transactionForm.getCategories().forEach(c -> {
+                categories.add(Category.of(c));
+            });
+        }
+
+        return new Transaction(transactionForm.getDescription(), value, localDate, categories);
     }
 
     public static Double getaDoubleValue(String valueStr) {
