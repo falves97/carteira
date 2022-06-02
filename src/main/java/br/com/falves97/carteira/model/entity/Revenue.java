@@ -8,9 +8,14 @@ import java.time.LocalDate;
 @DiscriminatorValue(value = "R")
 public class Revenue extends Transaction {
     public Revenue() {
+        super();
     }
 
     public Revenue(String description, Double value, LocalDate date) {
         super(description, value, date);
+    }
+
+    public Revenue(Transaction transaction) {
+        super(transaction);
     }
 }

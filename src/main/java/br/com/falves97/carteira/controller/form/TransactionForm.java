@@ -1,6 +1,7 @@
 package br.com.falves97.carteira.controller.form;
 
 import br.com.falves97.carteira.model.entity.Expense;
+import br.com.falves97.carteira.model.entity.Transaction;
 import com.sun.istack.NotNull;
 
 import javax.validation.constraints.NotEmpty;
@@ -31,11 +32,11 @@ public class TransactionForm {
         return date;
     }
 
-    public static Expense valueOf(TransactionForm transactionForm) {
+    public static Transaction valueOf(TransactionForm transactionForm) {
         LocalDate localDate = LocalDate.parse(transactionForm.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
         Double value = getaDoubleValue(transactionForm.getValue());
-        return new Expense(transactionForm.getDescription(), value, localDate);
+
+        return new Transaction(transactionForm.getDescription(), value, localDate);
     }
 
     public static Double getaDoubleValue(String valueStr) {

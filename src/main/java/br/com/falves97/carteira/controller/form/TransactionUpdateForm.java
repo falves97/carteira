@@ -1,6 +1,7 @@
 package br.com.falves97.carteira.controller.form;
 
 import br.com.falves97.carteira.model.entity.Expense;
+import br.com.falves97.carteira.model.entity.Transaction;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +23,7 @@ public class TransactionUpdateForm {
         return date;
     }
 
-    public static void update(TransactionUpdateForm transactionUpdateForm, Expense expense) {
+    public static void update(TransactionUpdateForm transactionUpdateForm, Transaction expense) {
         if (transactionUpdateForm.getDate() != null) {
             LocalDate localDate = LocalDate.parse(transactionUpdateForm.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             expense.setDate(localDate);

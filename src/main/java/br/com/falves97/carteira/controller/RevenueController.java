@@ -4,8 +4,9 @@ import br.com.falves97.carteira.controller.dto.TransactionDto;
 import br.com.falves97.carteira.controller.form.TransactionForm;
 import br.com.falves97.carteira.controller.form.TransactionUpdateForm;
 import br.com.falves97.carteira.model.entity.Expense;
+import br.com.falves97.carteira.model.entity.Revenue;
 import br.com.falves97.carteira.model.entity.Transaction;
-import br.com.falves97.carteira.repository.ExpenseRepository;
+import br.com.falves97.carteira.repository.RevenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("despesas")
-public class ExpenseController {
+@RequestMapping("receitas")
+public class RevenueController {
 
     @Autowired
-    private ExpenseRepository repository;
+    private RevenueRepository repository;
 
     @GetMapping
     public List<TransactionDto> list() {
@@ -33,10 +34,10 @@ public class ExpenseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TransactionDto> getEspense(@PathVariable Long id) {
-        Optional<Expense> optionalExpense = repository.findById(id);
+        Optional<Revenue> optionalRevenue = repository.findById(id);
 
-        if (optionalExpense.isPresent()) {
-            Transaction transaction = optionalExpense.get();
+        if (optionalRevenue.isPresent()) {
+            Transaction transaction = optionalRevenue.get();
             return ResponseEntity.ok(new TransactionDto(transaction));
         }
 
@@ -47,22 +48,22 @@ public class ExpenseController {
     @Transactional
     public ResponseEntity<TransactionDto> insert(@RequestBody @Valid TransactionForm transactionForm, UriComponentsBuilder uriComponentsBuilder) {
         Transaction transaction = TransactionForm.valueOf(transactionForm);
-        Expense expense = new Expense(transaction);
+        Revenue revenue = new Revenue(transaction);
 
-        repository.save(expense);
+        repository.save(revenue);
 
-        return getUriExpense(uriComponentsBuilder, expense);
+        return getUriExpense(uriComponentsBuilder, revenue);
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<TransactionDto> update(@RequestBody TransactionUpdateForm transactionUpdateForm, UriComponentsBuilder uriComponentsBuilder, @PathVariable Long id) {
-        Optional<Expense> expense = repository.findById(id);
+        Optional<Revenue> revenue = repository.findById(id);
 
-        if (expense.isPresent()) {
-            TransactionUpdateForm.update(transactionUpdateForm, expense.get());
+        if (revenue.isPresent()) {
+            TransactionUpdateForm.update(transactionUpdateForm, revenue.get());
 
-            return ResponseEntity.ok(new TransactionDto(expense.get()));
+            return ResponseEntity.ok(new TransactionDto(revenue.get()));
         }
 
         return ResponseEntity.badRequest().build();
@@ -71,9 +72,9 @@ public class ExpenseController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<TransactionDto> delete(@PathVariable Long id) {
-        Optional<Expense> expense = repository.findById(id);
+        Optional<Revenue> revenue = repository.findById(id);
 
-        if (expense.isPresent()) {
+        if (revenue.isPresent()) {
             repository.deleteById(id);
             return ResponseEntity.ok(null);
         }
@@ -81,7 +82,7 @@ public class ExpenseController {
         return ResponseEntity.badRequest().build();
     }
 
-    private ResponseEntity<TransactionDto> getUriExpense(UriComponentsBuilder uriComponentsBuilder, Expense expense) {
+    private ResponseEntity<TransactionDto> getUriExpense(UriComponentsBuilder uriComponentsBuilder, Revenue expense) {
         URI uri = uriComponentsBuilder
                 .path("despesas/{id}")
                 .buildAndExpand(expense.getId())

@@ -1,4 +1,4 @@
-package br.com.falves97.carteira;
+package br.com.falves97.carteira.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -27,6 +27,13 @@ public class Transaction {
         this.date = date;
     }
 
+    public Transaction(Transaction transaction) {
+        id = transaction.getId();
+        description = transaction.getDescription();
+        value = transaction.getValue();
+        date = transaction.getDate();
+    }
+
     public Long getId() {
         return id;
     }
