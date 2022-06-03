@@ -26,8 +26,16 @@ public class ExpenseController {
     private ExpenseRepository repository;
 
     @GetMapping
-    public List<TransactionDto> list() {
-        List<Transaction> transactions = new ArrayList<>(repository.findAll());
+    public List<TransactionDto> list(@RequestParam(required = false) String descricao) {
+        List<Transaction> transactions;
+
+        if (descricao != null && !descricao.isEmpty()){
+            transactions = new ArrayList<>(repository.findByDescriptionContainsIgnoreCase(descricao));
+        }
+        else {
+            transactions = new ArrayList<>(repository.findAll());
+        }
+
         return TransactionDto.convertAll(transactions);
     }
 

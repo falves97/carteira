@@ -3,7 +3,6 @@ package br.com.falves97.carteira.controller;
 import br.com.falves97.carteira.controller.dto.TransactionDto;
 import br.com.falves97.carteira.controller.form.TransactionForm;
 import br.com.falves97.carteira.controller.form.TransactionUpdateForm;
-import br.com.falves97.carteira.model.entity.Expense;
 import br.com.falves97.carteira.model.entity.Revenue;
 import br.com.falves97.carteira.model.entity.Transaction;
 import br.com.falves97.carteira.repository.RevenueRepository;
@@ -27,8 +26,16 @@ public class RevenueController {
     private RevenueRepository repository;
 
     @GetMapping
-    public List<TransactionDto> list() {
-        List<Transaction> transactions = new ArrayList<>(repository.findAll());
+    public List<TransactionDto> list(@RequestParam(required = false) String descricao) {
+        List<Transaction> transactions;
+
+        if (descricao != null && !descricao.isEmpty()){
+            transactions = new ArrayList<>(repository.findByDescriptionContainsIgnoreCase(descricao));
+        }
+        else {
+            transactions = new ArrayList<>(repository.findAll());
+        }
+
         return TransactionDto.convertAll(transactions);
     }
 
