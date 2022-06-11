@@ -1,7 +1,6 @@
 package br.com.falves97.carteira.model.entity;
 
-import br.com.falves97.carteira.model.converter.TransactionConverter;
-import org.hibernate.annotations.Type;
+import br.com.falves97.carteira.model.converter.CategoriesConverter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,7 +12,8 @@ import java.util.List;
 @DiscriminatorColumn(name = "type", length = 1, discriminatorType = DiscriminatorType.STRING)
 public class Transaction {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     @Column(unique = true)
     protected String description;
@@ -27,7 +27,7 @@ public class Transaction {
         setCategories(null);
     }
 
-    @Convert(converter = TransactionConverter.class)
+    @Convert(converter = CategoriesConverter.class)
     protected List<Category> categories;
 
     public Transaction(String description, Double value, LocalDate date) {

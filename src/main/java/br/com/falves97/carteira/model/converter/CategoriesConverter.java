@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.AttributeConverter;
 import java.util.List;
 
-public class TransactionConverter implements AttributeConverter<List<Category>, String> {
+public class CategoriesConverter implements AttributeConverter<List<Category>, String> {
     @Autowired
     private ObjectMapper objectMapper;
 

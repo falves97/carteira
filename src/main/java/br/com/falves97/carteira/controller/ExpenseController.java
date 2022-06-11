@@ -14,6 +14,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.Month;
+import java.time.Year;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +96,16 @@ public class ExpenseController {
 
         return ResponseEntity.badRequest().build();
     }
+
+    @GetMapping("/{ano}/{mes}")
+    public List<TransactionDto> resumeMonth(@PathVariable Integer ano, @PathVariable Integer mes) {
+        YearMonth yearMonth = YearMonth.of(ano, mes);
+
+        List<Transaction> expenses= new ArrayList<>(repository.findByDateBetween(yearMonth.atDay(1), yearMonth.atEndOfMonth()));
+
+        return TransactionDto.convertAll(expenses);
+    }
+
 
     private ResponseEntity<TransactionDto> getUriExpense(UriComponentsBuilder uriComponentsBuilder, Expense expense) {
         URI uri = uriComponentsBuilder

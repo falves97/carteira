@@ -16,13 +16,10 @@ public class TransactionDto {
     private String value;
     private String date;
 
-    private List<String> categories;
-
     public TransactionDto(Transaction transaction) {
         this.id = transaction.getId();
         this.description = transaction.getDescription();
         this.date = transaction.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        this.categories = loadCategories(transaction.getCategories());
         setValue(transaction.getValue());
     }
 
@@ -47,17 +44,6 @@ public class TransactionDto {
 
     public String getDate() {
         return date;
-    }
-
-    public List<String> getCategories() {
-        return categories;
-    }
-
-    public static List<String> loadCategories(List<Category> categories) {
-        return categories
-                .stream()
-                .map(Category::getCategory)
-                .collect(Collectors.toList());
     }
 
     public static List<TransactionDto> convertAll(List<Transaction> transactions) {
